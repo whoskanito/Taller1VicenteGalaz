@@ -11,8 +11,6 @@ public class Main
 	
 	public static void main(String[] args) 
 	{
-		
-		//programa();
 		try { menu(); } 
 		catch (FileNotFoundException e) { System.out.println("Archivo no encontrado"); }
 		catch (Exception e) {System.out.println("Ocurrió un error: " + e.getMessage());}
@@ -23,12 +21,12 @@ public class Main
 		/*
 		 * Aquí comienza el menú interactivo, usamos do while ya que es lo más práctico al hacer un menú,
 		 * siempre nos aseguramos que el usuario entre al menos 1 vez al menú, además, para evitar que 
-		 * el usuario se equivoque en la selección de opciones, usamos en la variable opciones el método
-		 * .trim(), aunque el usuario haga " 3" en vez de "3", la opcion eliminará el espacio.
+		 * el usuario se equivoque en la selección de opciones, usamos en la variable opciones (y en varias
+		 * variables de selección) el método .trim(), aunque el usuario haga " 3" en vez de "3", la opcion 
+		 * eliminará el espacio.
 		 */
 		
 		boolean ejecucion = true;
-		boolean ejecucion1 = true;
 		String[][] usuarios = archivo_usuarios();
 		String[][] log = archivo_registros();
 		String opcion;
@@ -45,7 +43,6 @@ public class Main
 			
 			if (opcion.equals("1"))
 			{
-				
 				boolean acceso = false;
 				int i;
 				System.out.println();
@@ -55,7 +52,7 @@ public class Main
 				String password = teclado.nextLine().trim();	
 				System.out.println();
 
-		// En esta parte comprobamos usuario y contraseña para ver si permitimos el acceso o no
+				// En esta parte comprobamos usuario y contraseña para ver si permitimos el acceso o no
 				for (i = 0; i < usuarios.length; i++)
 				{
 					if (user.equals(usuarios[i][0]))
@@ -67,13 +64,21 @@ public class Main
 							System.out.println();
 						}
 					}
-				}
-				
+				}				
 				if (acceso)
 				{
+					boolean ejecucion1 = true;
+					System.out.println("Bienvenido " + user + "!");
 					do
 					{
-						System.out.println("Bienvenido " + user + "!");
+					/*
+					 * Aquí es necesario explicar el funcionamiento de lo que se le muestra al usuario 
+					 * y los índices del log, al usuario se le muestra una posición falsa del índice de su registro
+					 * (1,2,3,4...) en cambio el registro de por ejemplo, Martin, seria realmente 0,3,6...
+					 * Para eso creamos la lista pocisiones, esta la usaremos para guardar el índice real más adelante
+					 */
+						int[] posiciones = new int[log.length];
+						boolean ejecucion_log_user = true;
 						System.out.println();
 						System.out.println("¿Qué deseas realizar? ");
 						System.out.println("1) Registrar actividad. ");
@@ -90,7 +95,133 @@ public class Main
 						}
 						else if (opcion_1.equals("2"))
 						{
-							
+							do
+							{			
+								int count = 0;
+								System.out.println("¿Qué actividad quieres modificar?");
+								System.out.println();
+								System.out.println("0) Regresar al menu de usuario");
+								for (int l = 0; l < log.length; l++)
+								{
+									if (log[l][0] != null && log[l][0].equals(user))
+									{
+										System.out.println((count + 1) + ") " +
+										log[l][0] + ", " +
+										log[l][1] + ", " +
+										log[l][2] + ", " +
+										log[l][3]
+												);
+										posiciones[count] = l; //Esto guarda el índice real :p
+										count++;
+									}
+								}
+								System.out.print("--> ");
+								int log_seleccionado = teclado.nextInt();
+								System.out.println();
+								teclado.nextLine();
+								if (log_seleccionado == 0)
+								{
+									ejecucion_log_user = false;
+								}
+								else if (log_seleccionado > 0 && log_seleccionado <= 300)
+								{
+									boolean ejecucion_m_user1 = true;
+									do
+									{										
+										System.out.println("¿Que es lo que quieres modificar? ");
+										System.out.println("1) Fecha");
+										System.out.println("2) Duración");
+										System.out.println("3) Tipo de actividad");
+										System.out.println("4) Regresar al menu de usuario");
+										System.out.print("--> ");
+										String opcion_2 = teclado.nextLine();
+										System.out.println();
+					/*
+					 * Aquí creamos la variable índice real, como el arreglo posiciones tiene el largo
+					 * del log original, podemos manipular ciertos índices en específico, el contador llegará
+					 * a un máximo del log del usuario, y arriba le decimos a posiciones que en el índice de 
+					 * contador sea igual al original, y de esa forma indice real puede tomar su valor como
+					 * lo hacemos más abajo, de esa forma si Martín quiere cambiar su registro numero 67 en 
+					 * realidad estaría cambíando el 199. (La explicación está acá porque fue la primera opción en la que
+					 * tuve que cranear esta solución de los índices xd).
+					 * 
+					 * meow :3
+					 */
+										int indiceReal = posiciones[log_seleccionado - 1];
+										if (opcion_2.equals("1"))
+										{	
+											System.out.println("0) Regresar");
+											System.out.print("Ingresa nueva fecha: ");
+											String nueva_fecha = teclado.nextLine().trim();
+											System.out.println();
+											if (nueva_fecha.equals("0"))
+											{
+												ejecucion_m_user1 = false;
+												ejecucion_log_user = false;											
+											}
+											else
+											{
+												log[indiceReal][1] = nueva_fecha;		
+												guardar_log(log);
+												System.out.println("Registro actualizado!");
+												System.out.println();
+												ejecucion_m_user1 = false;
+												ejecucion_log_user = false;
+											} 
+										} 											
+										else if (opcion_2.equals("2"))
+										{
+											System.out.println("0) Regresar");
+											System.out.print("Ingresa duración actualizada: ");
+											String nuevo_log = teclado.nextLine().trim();
+											System.out.println();
+											if (nuevo_log.equals("0"))
+											{
+												ejecucion_m_user1 = false;
+												ejecucion_log_user = false;
+												
+											}
+											else
+											{
+												log[indiceReal][2] = nuevo_log;		
+												guardar_log(log);
+												System.out.println("Registro actualizado!");
+												System.out.println();
+												ejecucion_m_user1 = false;
+												ejecucion_log_user = false;
+											}
+											
+										}
+										else if (opcion_2.equals("3"))
+										{
+											System.out.println("0) Regresar");								
+											System.out.print("Ingrese nuevo tipo de actividad: ");
+											String nuevo_log = teclado.nextLine().trim();
+											System.out.println();											
+											if (nuevo_log.equals("0"))
+											{
+												ejecucion_m_user1 = false;
+												ejecucion_log_user = false;
+												
+											}
+											else
+											{
+												log[indiceReal][3] = nuevo_log;		
+												guardar_log(log);
+												System.out.println("Registro actualizado!");
+												System.out.println();
+												ejecucion_m_user1 = false;
+												ejecucion_log_user = false;
+											} 
+										}
+										else if (opcion_2.equals("4"))
+										{
+											ejecucion_m_user1 = false;
+											ejecucion_log_user = false;
+										}	
+									} while (ejecucion_m_user1);
+								}
+							} while (ejecucion_log_user);
 						}
 						else if (opcion_1.equals("3"))
 						{
@@ -124,10 +255,15 @@ public class Main
 							ejecucion1 = false;
 						}
 					} while (ejecucion1 == true);
-					
-					
 				}
-				
+				else
+				{
+					System.out.println("Datos inválidos ");
+					System.out.println();
+				}
+			}
+			else if (opcion.equals("2"))
+			{
 				
 			}
 			else if (opcion.equals("3"))
@@ -136,7 +272,6 @@ public class Main
 				System.out.println("Ejecución finalizada.");
 				ejecucion = false;
 			}
-			
 		} while (ejecucion == true);
 	}
 	
@@ -223,7 +358,7 @@ public class Main
 		for (int i = 0; i < log.length; i++)
 		{
 			// Este if también sirve para no escribir de más en los txt.
-			if (log[i][0] == null)
+			if (log[i][0] != null)
 			{
 				escritor.println(
 		                log[i][0] + ";" +
