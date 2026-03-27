@@ -110,66 +110,63 @@ public class Main
 			 * ningún vacío, es decir que el registro está lleno, y no se permitirá hacer cambios.														 						
 			 */							
 							do
-							{								
-									//
+							{	
+								System.out.println("0) Regresar al menu de usuario");
+								System.out.print("Ingresa fecha de actividad: ");
+								String na_fecha = teclado.nextLine();
+								System.out.println();
+								if (na_fecha.equals("0"))
+								{
+									ejecucion_log_user = false;
+								} 
+								else
+								{
 									System.out.println("0) Regresar al menu de usuario");
-									System.out.print("Ingresa fecha de actividad: ");
-									String na_fecha = teclado.nextLine();
+									System.out.print("Ingresa hora de actividad: ");
+									String na_hora = teclado.nextLine();
 									System.out.println();
-									if (na_fecha.equals("0"))
+									if (na_hora.equals("0"))
 									{
 										ejecucion_log_user = false;
-									} 
+									}
 									else
 									{
 										System.out.println("0) Regresar al menu de usuario");
-										System.out.print("Ingresa hora de actividad: ");
-										String na_hora = teclado.nextLine();
+										System.out.print("¿Qué actividad quieres registrar?: ");
+										String na_actividad = teclado.nextLine();
 										System.out.println();
-										if (na_hora.equals("0"))
+										if (na_actividad.equals("0"))
 										{
 											ejecucion_log_user = false;
 										}
 										else
 										{
-											System.out.println("0) Regresar al menu de usuario");
-											System.out.print("¿Qué actividad quieres registrar?: ");
-											String na_actividad = teclado.nextLine();
-											System.out.println();
-											if (na_actividad.equals("0"))
+											boolean se_guardo = false;
+											for (int q = 0; q < log.length; q++)
 											{
-												ejecucion_log_user = false;
+												if (log[q][0] == null)
+												{
+													log[q][0] = user;
+													log[q][1] = na_fecha;
+													log[q][2] = na_hora;
+													log[q][3] = na_actividad;
+													se_guardo = true;
+													ejecucion_log_user = false;
+													break;
+												}
+											}												
+											if (!se_guardo)
+											{
+												System.out.println("El registro está lleno, elimina actividades antes de añadir");
 											}
-											else
-											{
-												boolean se_guardo = false;
-												for (int q = 0; q < log.length; q++)
-												{
-													if (log[q][0] == null)
-													{
-														log[q][0] = user;
-														log[q][1] = na_fecha;
-														log[q][2] = na_hora;
-														log[q][3] = na_actividad;
-														se_guardo = true;
-														ejecucion_log_user = false;
-														break;
-													}
-												}												
-												if (!se_guardo)
-												{
-													System.out.println("El registro está lleno, elimina actividades antes de añadir");
-												}
-												else if (se_guardo)
-												{ 
-													guardar_log(log);
-													System.out.println("Registro guardado!");
-												}
+											else if (se_guardo)
+											{ 
+												guardar_log(log);
+												System.out.println("Registro guardado!");
 											}
 										}
-									}																																					
-									//
-								
+									}
+								}																																					
 							} while (ejecucion_log_user == true);
 						}
 						else if (opcion_1.equals("2"))
@@ -196,7 +193,6 @@ public class Main
 								}
 								System.out.print("--> ");
 								int log_seleccionado = teclado.nextInt();
-								System.out.println();
 								teclado.nextLine();
 								if (log_seleccionado == 0)
 								{
@@ -303,8 +299,55 @@ public class Main
 							} while (ejecucion_log_user);
 						}
 						else if (opcion_1.equals("3"))
-						{
+						{							
+				/*
+				 * Bueno y aquí también usamos la lógica del 2 pero en vez de modificar, eliminamos, le damos los 
+				 * índices falsos al usuario y usamos exactamente las mismas varibles puesto que las creamos dentro
+				 * de los ciclos asi que cada vez que el usuario quiera borrar o modificar el indice real siempre se 
+				 * creará al momento de apretar la opción, no antes, asi no guarda información.
+				 */
 							
+							do
+							{
+								int count1 = 0;
+								System.out.println("¿Qué actividad quieres eliminar?");
+								System.out.println();
+								System.out.println("0) Regresar al menu de usuario");
+								for (int a = 0; a < log.length; a++)
+								{
+									if (log[a][0] != null && log[a][0].equals(user))
+									{
+										System.out.println((count1 + 1) + ") " +
+										log[a][0] + ", " +
+										log[a][1] + ", " +
+										log[a][2] + ", " +
+										log[a][3]
+												);
+										posiciones[count1] = a; //Esto guarda el índice real :p
+										count1++;
+									}
+								}
+								System.out.print("--> ");
+								int log_seleccionado = teclado.nextInt();
+								teclado.nextLine();								
+								if (log_seleccionado == 0)
+								{
+									ejecucion_log_user = false;
+								}
+								else if (log_seleccionado > 0 && log_seleccionado <= 300)
+								{
+									int indiceReal = posiciones[log_seleccionado - 1];
+									log[indiceReal][0] = null;
+									log[indiceReal][1] = null;
+									log[indiceReal][2] = null;
+									log[indiceReal][3] = null;
+									guardar_log(log);
+									System.out.println("Registro eliminado :(");
+									System.out.println();
+									ejecucion_log_user = false;
+								}
+							} while (ejecucion_log_user);
+								
 						}
 						else if (opcion_1.equals("4"))
 						{
