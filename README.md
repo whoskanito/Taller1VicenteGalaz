@@ -10,7 +10,7 @@
  El proyecto cuenta con una única clase:
  
 - Main:
-  Clase principal que contiene el método main y toda la lógica del programa.
+  Clase principal que contiene el método main y toda la lógica del programa.  
   Incluye métodos para:
   - Registrar actividades
   - Modificar actividades
