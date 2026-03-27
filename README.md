@@ -1,9 +1,11 @@
 ### Taller n°1 Programación Orientada a Objetos
 
-<p> **Integrante:** Vicente Renato Galaz Palacios <br>
-**RUT:** 21.831.202-0 <br>
-**Usuario:** whoskanito </p>
-  
+<p>
+<strong>Integrante:</strong><br>
+<strong>RUT:</strong><br>
+<strong>Usuario:</strong>
+</p>
+
 ### Estructura del Proyecto
  El proyecto cuenta con una única clase:
  
