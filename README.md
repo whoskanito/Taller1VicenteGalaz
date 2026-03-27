@@ -1,8 +1,8 @@
 ### Taller n°1 Programación Orientada a Objetos
 
-**Integrante:** Vicente Renato Galaz Palacios
-**RUT:** 21.831.202-0
-**Usuario:** whoskanito
+<p>**Integrante:** Vicente Renato Galaz Palacios.<br>
+**RUT:** 21.831.202-0<br>
+**Usuario:** whoskanito</p>
   
 ### Estructura del Proyecto
  El proyecto cuenta con una única clase:
@@ -14,7 +14,7 @@
   - Modificar actividades
   - Mostrar actividades
   
-###Instrucciones de ejecución
+### Instrucciones de ejecución
   
 1.  Clonar o descargar el repositorio desde github.
 2. Abrir proyecto en eclipse.
