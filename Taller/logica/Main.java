@@ -29,8 +29,7 @@ public class Main
 		boolean ejecucion = true;
 		String[][] usuarios = archivo_usuarios();
 		String[][] log = archivo_registros();
-		String opcion;
-		
+		String opcion;	
 		System.out.println(usuarios[0][0]);
 		do
 		{
@@ -64,19 +63,27 @@ public class Main
 							System.out.println();
 						}
 					}
-				}				
+				}		
+				/*
+				 * En esta parte iniciamos el menú de usuario con sus respectivas opciones
+				 */
+				
 				if (acceso)
 				{
 					boolean ejecucion1 = true;
 					System.out.println("Bienvenido " + user + "!");
 					do
 					{
-					/*
-					 * Aquí es necesario explicar el funcionamiento de lo que se le muestra al usuario 
-					 * y los índices del log, al usuario se le muestra una posición falsa del índice de su registro
-					 * (1,2,3,4...) en cambio el registro de por ejemplo, Martin, seria realmente 0,3,6...
-					 * Para eso creamos la lista pocisiones, esta la usaremos para guardar el índice real más adelante
-					 */
+			/*
+			 * 1. Aquí es necesario explicar el funcionamiento de lo que se le muestra al usuario 
+			 * y los índices del log, al usuario se le muestra una posición falsa del índice de su registro
+			 * (1,2,3,4...) en cambio el registro de por ejemplo, Martin, seria realmente 0,3,6...
+			 * Para eso creamos la lista pocisiones, esta la usaremos para guardar el índice real más adelante.
+			 * 
+			 * 2. Usaremos en todo momento el boolean de ejecucion_log_user para los menú del 1 al 4, ya que 
+			 * como está aquí arriba su inicialización siempre que el usuario quiera volver, volverá al menú
+			 * de usuario y no se deslogueará su cuenta.
+			 */
 						int[] posiciones = new int[log.length];
 						boolean ejecucion_log_user = true;
 						System.out.println();
@@ -90,8 +97,80 @@ public class Main
 						String opcion_1 = teclado.nextLine();
 						System.out.println();
 						if (opcion_1.equals("1"))
-						{
+						{			
 							
+			/*
+			 * Gracias a que hice la opción 2 de modificar actividad primero, hacer la 1 se me hizo súper
+			 * fácil, aquí simplemente recorremos el log hasta encontrar un espacio vacío, al decirle
+			 * que si encuentra un null (independiente si es usuario, fecha, hora o actividad) rellene
+			 * con datos nuevos, hacemos un break instantaneamente ya que, de lo contrario, todas las lineas
+			 * a partir de esa, se llenarán de copias, lo cual no queremos, solo queremos que 1 sola linea
+			 * se actualice, asi que luego invocamos a guardar_log y listo, se añade la nueva actividad, además
+			 * tenemos un boolean que avisa si se modificó o no alguna linea, si no lo hace significa que no hay
+			 * ningún vacío, es decir que el registro está lleno, y no se permitirá hacer cambios.														 						
+			 */							
+							do
+							{								
+									//
+									System.out.println("0) Regresar al menu de usuario");
+									System.out.print("Ingresa fecha de actividad: ");
+									String na_fecha = teclado.nextLine();
+									System.out.println();
+									if (na_fecha.equals("0"))
+									{
+										ejecucion_log_user = false;
+									} 
+									else
+									{
+										System.out.println("0) Regresar al menu de usuario");
+										System.out.print("Ingresa hora de actividad: ");
+										String na_hora = teclado.nextLine();
+										System.out.println();
+										if (na_hora.equals("0"))
+										{
+											ejecucion_log_user = false;
+										}
+										else
+										{
+											System.out.println("0) Regresar al menu de usuario");
+											System.out.print("¿Qué actividad quieres registrar?: ");
+											String na_actividad = teclado.nextLine();
+											System.out.println();
+											if (na_actividad.equals("0"))
+											{
+												ejecucion_log_user = false;
+											}
+											else
+											{
+												boolean se_guardo = false;
+												for (int q = 0; q < log.length; q++)
+												{
+													if (log[q][0] == null)
+													{
+														log[q][0] = user;
+														log[q][1] = na_fecha;
+														log[q][2] = na_hora;
+														log[q][3] = na_actividad;
+														se_guardo = true;
+														ejecucion_log_user = false;
+														break;
+													}
+												}												
+												if (!se_guardo)
+												{
+													System.out.println("El registro está lleno, elimina actividades antes de añadir");
+												}
+												else if (se_guardo)
+												{ 
+													guardar_log(log);
+													System.out.println("Registro guardado!");
+												}
+											}
+										}
+									}																																					
+									//
+								
+							} while (ejecucion_log_user == true);
 						}
 						else if (opcion_1.equals("2"))
 						{
@@ -243,12 +322,10 @@ public class Main
 						   /* 
 							* Aquí invocamos a la funcion para guardar la contraseña, reescribiendo 
 							* todo a partir de la matriz
-							*/
-							
+							*/							
 							guardar_usuarios(usuarios);
 							System.out.println("Contraseña actualizada!");
-							System.out.println();
-							
+							System.out.println();							
 						}
 						else if (opcion_1.equals("5"))
 						{
@@ -351,7 +428,7 @@ public class Main
 	 * Aquí más de lo mismo, en vez de cambiar usuario, cambiamos el log completo, tomamos como argumento la
 	 * matriz que contiene el log y lo reescribimos completamente.
 	 */
-	
+	 
 	public static void guardar_log(String[][] log) throws FileNotFoundException
 	{
 		PrintWriter escritor = new PrintWriter(new File("Registros.txt"));
@@ -369,6 +446,6 @@ public class Main
 			}
 		}
 		escritor.close();
-	}
+	 } 
 
 }
