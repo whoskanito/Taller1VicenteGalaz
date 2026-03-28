@@ -16,6 +16,7 @@
   - Modificar actividades
   - Mostrar actividades
   - Mostrar actividad más popular en general y por usuario.
+  - Mostrar al usuario más procrastinador.
   
 ### Instrucciones de ejecución
   

@@ -15,6 +15,8 @@ public class Main
 		catch (FileNotFoundException e) { System.out.println("Archivo no encontrado"); }
 		catch (Exception e) {System.out.println("Ocurrió un error: " + e.getMessage());}
 	}
+	
+	
 
 	public static void menu() throws FileNotFoundException
 	{	
@@ -190,6 +192,7 @@ public class Main
 								}
 								System.out.print("--> ");
 								int log_seleccionado = teclado.nextInt();
+								System.out.println();
 								teclado.nextLine();
 								if (log_seleccionado == 0)
 								{
@@ -236,7 +239,7 @@ public class Main
 												log[indiceReal][1] = nueva_fecha;		
 												guardar_log(log);
 												System.out.println("Registro actualizado!");
-												System.out.println();
+
 												ejecucion_m_user1 = false;
 												ejecucion_log_user = false;
 											} 
@@ -258,7 +261,7 @@ public class Main
 												log[indiceReal][2] = nuevo_log;		
 												guardar_log(log);
 												System.out.println("Registro actualizado!");
-												System.out.println();
+
 												ejecucion_m_user1 = false;
 												ejecucion_log_user = false;
 											}
@@ -281,7 +284,7 @@ public class Main
 												log[indiceReal][3] = nuevo_log;		
 												guardar_log(log);
 												System.out.println("Registro actualizado!");
-												System.out.println();
+
 												ejecucion_m_user1 = false;
 												ejecucion_log_user = false;
 											} 
@@ -389,9 +392,10 @@ public class Main
 				 * a los condicionales solo pongamos print resultado en vez de hacer el proceso en cada if, asi
 				 * se ve un poco más limpio.
 				 */
-				// String[] unicos = unicos(log); Lección aprendida, mirar el git antes de hacer nada...
+				// String[] unicos = unicos(log); Lección aprendida, mirar el git de nuevo antes de hacer nada...
 				String[] moda = actividadMasRealizada(log);
 				String[][] moda_usuario = actividadDeModa_usuario(log);
+				String[] flojo = elFlojo(log);
 				boolean menu_analisis = true;
 				System.out.println("Bienvenido al menú de análisis c:");
 				System.out.println();
@@ -429,6 +433,7 @@ public class Main
 					{
 						System.out.print("Usuario con más procrastinación: ");
 						System.out.println();
+						System.out.println(flojo[0] + " es el usuario más procrastinador con " + flojo[1] + " horas perdidas");
 					
 					}
 					else if (option.equals("4"))
@@ -697,49 +702,62 @@ public class Main
 		 * un bug de que si agregaba una actividad luego la funcion no la tomaba y se quedaba con el log original, iwkms
 		 */
 	}
-	
-	/* 
-	 * Tuve que estar como una hora para darme cuenta que usaba el mismo i en los dos for y aparte tenia
-	 * el segundo for dentro del primero, según yo estaba bien el unicos pero cuando lo llamaba desde el 
-	 * menú se me caía el programa entero xd
-	 * 
-	 * Es una función para buscar únicos en el log, se actualiza cada que un usuario revisa el menu de análisis.
+
+	/*
+	 * Esta funcion es un poco más sencilla porque solo hay que sumar las horas pero tiene que ser 
+	 * por usuario asi que debemos usar 2 arreglos nuevamente, en una guardariamos los usuarios y en
+	 * la otra las horas, no podemos usar una matriz porque necesitamos comparar y seria un poco mas latoso
+	 * asi que 2 listas no más, con un ciclo for leemos log y agregamos a cada usuario sus horas correspondientes, mas
+	 * adelante hacemos la típica comparación de mayor menor y vemos quien perdió más tiempo, luego retornamos
+	 * la lista y podemos usarla en el menú.
 	 */
 	
-	public static String[] unicos(String[][] log)
+	public static String[] elFlojo(String[][] log) 
 	{
-	    String[] unicos = new String[300];
-	    int cantidad_unicos = 0;
-
+		String[] usuarios = new String[300];
+	    int[] horas = new int[300];
+	    int cant = 0;
+	    
 	    for (int i = 0; i < log.length; i++)
 	    {
-	        if (log[i][3] != null)
+	        if (log[i][0] != null)
 	        {
-	            String actividad = log[i][3];
-	            boolean repetida = false;
-
-	            for (int j = 0; j < cantidad_unicos; j++)
+	            String user = log[i][0];
+	            int h = Integer.parseInt(log[i][2]);
+	            boolean existe = false;
+	            for (int j = 0; j < cant; j++)
 	            {
-	                if (unicos[j] != null && unicos[j].equals(actividad))
+	                if (usuarios[j] != null && usuarios[j].equals(user))
 	                {
-	                    repetida = true;
+	                    horas[j] = horas[j] + h;
+	                    existe = true;
 	                }
 	            }
-
-	            if (repetida == false)
+	            if (existe == false)
 	            {
-	                unicos[cantidad_unicos] = actividad;
-	                cantidad_unicos++;
+	                usuarios[cant] = user;
+	                horas[cant] = h;
+	                cant++;
 	            }
 	        }
 	    }
-
-	    String[] resultado = new String[cantidad_unicos];
-	    for (int k = 0; k < cantidad_unicos; k++)
+	    int max = 0;
+	    String peor = "";
+	    
+	    // Aqui comparamos al mas procrastinador 
+	    for (int i = 0; i < cant; i++)
 	    {
-	        resultado[k] = unicos[k];
+	        if (horas[i] > max)
+	        {
+	            max = horas[i];
+	            peor = usuarios[i];
+	        }
 	    }
-
+	    String[] resultado = new String[2];
+	    resultado[0] = peor;
+	    resultado[1] = String.valueOf(max);
+	    
 	    return resultado;
 	}
+	
 }
