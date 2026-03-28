@@ -1,5 +1,24 @@
-Taller Programación Orientada a Objetos número 1
-Integrante: Vicente Renato Galaz Palacios. Rut: 21831202-0. Usuario: whoskanito	
-El proyecto consta de un solo paquete llamado "logica" el cual solo tiene una clase, el main del proyecto.
-Para ejecutar solo se debe ejecutar el main o el proyecto, cualquiera sirve.
+### Taller n°1 Programación Orientada a Objetos
 
+<p>
+<strong>Integrante:</strong> Vicente Renato Galaz Palacios <br>
+<strong>RUT:</strong> 21.831.202-0 <br>
+<strong>Usuario:</strong> whoskanito
+</p>
+
+### Estructura del Proyecto
+ El proyecto cuenta con una única clase:
+ 
+- Main:
+  Clase principal que contiene el método main y toda la lógica del programa.  
+  Incluye métodos para:
+  - Registrar actividades
+  - Modificar actividades
+  - Mostrar actividades
+  - Mostrar actividad más popular en general y por usuario.
+  
+### Instrucciones de ejecución
+  
+1.  Clonar o descargar el repositorio desde github.
+2. Abrir proyecto en eclipse.
+3. Ejecutar la clase "Main.java" como aplicación Java.
