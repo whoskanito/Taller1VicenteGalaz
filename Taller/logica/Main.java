@@ -25,21 +25,18 @@ public class Main
 		 * variables de selección) el método .trim(), aunque el usuario haga " 3" en vez de "3", la opcion 
 		 * eliminará el espacio.
 		 */
-		
 		boolean ejecucion = true;
-		String[][] usuarios = archivo_usuarios();
-		String[][] log = archivo_registros();
 		String opcion;	
-		System.out.println(usuarios[0][0]);
 		do
 		{
+			String[][] usuarios = archivo_usuarios();
+			String[][] log = archivo_registros();
 			System.out.println("---------- MENÚ ----------");
 			System.out.println("1) Menú de Usuarios");
 			System.out.println("2) Menú de Análisis");
 			System.out.println("3) Salir");
 			System.out.print("--> ");
-			opcion = teclado.nextLine().trim();
-			
+			opcion = teclado.nextLine().trim();			
 			if (opcion.equals("1"))
 			{
 				boolean acceso = false;
@@ -115,7 +112,7 @@ public class Main
 								System.out.print("Ingresa fecha de actividad: ");
 								String na_fecha = teclado.nextLine();
 								System.out.println();
-								if (na_fecha.equals("0"))
+								if (na_fecha.equals("0") || na_fecha.isEmpty())
 								{
 									ejecucion_log_user = false;
 								} 
@@ -125,7 +122,7 @@ public class Main
 									System.out.print("Ingresa hora de actividad: ");
 									String na_hora = teclado.nextLine();
 									System.out.println();
-									if (na_hora.equals("0"))
+									if (na_hora.equals("0") || na_hora.isEmpty())
 									{
 										ejecucion_log_user = false;
 									}
@@ -135,7 +132,7 @@ public class Main
 										System.out.print("¿Qué actividad quieres registrar?: ");
 										String na_actividad = teclado.nextLine();
 										System.out.println();
-										if (na_actividad.equals("0"))
+										if (na_actividad.equals("0") || na_actividad.isEmpty())
 										{
 											ejecucion_log_user = false;
 										}
@@ -305,8 +302,7 @@ public class Main
 				 * índices falsos al usuario y usamos exactamente las mismas varibles puesto que las creamos dentro
 				 * de los ciclos asi que cada vez que el usuario quiera borrar o modificar el indice real siempre se 
 				 * creará al momento de apretar la opción, no antes, asi no guarda información.
-				 */
-							
+				 */							
 							do
 							{
 								int count1 = 0;
@@ -383,8 +379,83 @@ public class Main
 				}
 			}
 			else if (opcion.equals("2"))
-			{
-				
+			{				
+				/*
+				 * Aquí empezamos el menú de análisis, no se necesita que el usuario ingrese credenciales ni 
+				 * modificar los logs asi que, las funciones de guardado no las usaremos puesto que siempre 
+				 * que los usuarios entren a este menú, todo estaría actualizado, solo necesitamos cargar los 
+				 * datos y almacenarlos en matrices, por cierto, como en esta parte solo revisamos mas no
+				 * cambiamos, todos los proceso de cálculo los haremos en funciones, cosa que cuando vayamos
+				 * a los condicionales solo pongamos print resultado en vez de hacer el proceso en cada if, asi
+				 * se ve un poco más limpio.
+				 */
+				// String[] unicos = unicos(log); Lección aprendida, mirar el git antes de hacer nada...
+				String[] moda = actividadMasRealizada(log);
+				String[][] moda_usuario = actividadDeModa_usuario(log);
+				boolean menu_analisis = true;
+				System.out.println("Bienvenido al menú de análisis c:");
+				System.out.println();
+				do
+				{					
+					System.out.println("¿Que deseas estadística deseas revisar?");
+					System.out.println();
+					System.out.println("1) Actividad más realizada");
+					System.out.println("2) Actividad más realizada por cada usuario");
+					System.out.println("3) Usuario con mayor procastinacion");
+					System.out.println("4) Ver todas las actividades");
+					System.out.println("5) Volver al menú principal.");
+					System.out.print("--> ");
+					String option = teclado.nextLine();
+					System.out.println();
+					if (option.equals("1"))
+					{
+						System.out.println("Actividad más realizada en general:");
+						System.out.println();
+						System.out.println(moda[0] + " ha sido la actividad más realizada con un total de " + moda[1] + " horas invertidas.");
+						System.out.println();
+					}
+					else if (option.equals("2"))
+					{
+						System.out.println("Actividad más realizada por usuario registrado: ");
+						System.out.println();
+						for (int u = 0; u < moda_usuario.length;u++) //ya ni se cuanta variables he iniciado en los for xd
+						{
+							System.out.println(moda_usuario[u][0] + " -> " + moda_usuario[u][1] + " -> con " + moda_usuario[u][2] + " horas registradas");
+							
+						}
+						System.out.println();
+					}
+					else if (option.equals("3"))
+					{
+						System.out.print("Usuario con más procrastinación: ");
+						System.out.println();
+					
+					}
+					else if (option.equals("4"))
+					{
+						System.out.println("Todas las actividades registradas");
+		// a "todas las actividades" pense que se refería a las actividades únicas, hice algo na que ver antes XD
+						System.out.println();
+						for (int z = 0; z < log.length; z++)
+						{
+							if (log[z][0] != null)
+							{
+								System.out.println((z + 1) + ") " +
+										log[z][0] + " el " +
+										log[z][1] + " hizo " +
+										log[z][2] + " hora(s) de " +
+										log[z][3]
+												);
+							}
+						}
+						System.out.println();
+					}
+					else if (option.equals("5"))
+					{									
+						menu_analisis = false;
+						System.out.println();
+					}
+				} while (menu_analisis);		
 			}
 			else if (opcion.equals("3"))
 			{
@@ -394,7 +465,6 @@ public class Main
 			}
 		} while (ejecucion == true);
 	}
-	
 	
 	// Lectura de Archivos "Registros" y "Usuarios"
 	public static String[][] archivo_usuarios() throws FileNotFoundException
@@ -452,7 +522,6 @@ public class Main
 	 * matriz que ya leyó el archivo anteriormente, asi que no se perderían datos, además el guardado ocurre después
 	 * de preguntarle al usuario la nueva contraseña por lo que la matriz que toma de argumento .
 	 */
-	
 	public static void guardar_usuarios(String[][] usuarios) throws FileNotFoundException
 	{
 		PrintWriter escritor = new PrintWriter(new File("Usuarios.txt"));
@@ -471,7 +540,6 @@ public class Main
 	 * Aquí más de lo mismo, en vez de cambiar usuario, cambiamos el log completo, tomamos como argumento la
 	 * matriz que contiene el log y lo reescribimos completamente.
 	 */
-	 
 	public static void guardar_log(String[][] log) throws FileNotFoundException
 	{
 		PrintWriter escritor = new PrintWriter(new File("Registros.txt"));
@@ -490,5 +558,188 @@ public class Main
 		}
 		escritor.close();
 	 } 
+	
+	
+	/*
+	 * En esta funcion usamos una lógica parecida que la de únicos, pero en vez de contabilizar 1 por 
+	 * tipo, le sumamos 1 a los que se repitan, y aparte contamos las horas invetidas.
+	 */
+	public static String[] actividadMasRealizada(String[][] log)
+	{
+		String[] actividades = new String[300];
+	    int[] horas = new int[300];
+	    int cant = 0;
+	    
+	    for (int i = 0; i < log.length; i++)
+	    {
+	        if (log[i][0] != null)
+	        {
+	            String actividad = log[i][3];
+	            int h = Integer.parseInt(log[i][2]); //con el parseInt convertimos el string en entero :p
+	            boolean existe = false;
 
+	            for (int j = 0; j < cant; j++)
+	            {
+	                if (actividades[j] != null && actividades[j].equals(actividad))
+	                {
+	                    horas[j] = horas[j] + h; //hacemos un acumulador pa cada actividad
+	                    existe = true;
+	                }
+	            }
+	            if (existe == false)
+	            {
+	                actividades[cant] = actividad;
+	                horas[cant] = h;
+	                cant++;
+	            }
+	        }
+	    }
+	    int max = 0;
+	    String mejor = "";
+	    for (int i = 0; i < cant; i++)
+	    {
+	        if (horas[i] > max)
+	        {
+	            max = horas[i];
+	            mejor = actividades[i];
+	        }
+	    }
+	    
+		String[] resultado = new String[2];
+		resultado[0] = mejor;
+	    resultado[1] = String.valueOf(max);
+		return resultado;
+	}
+	
+	/*
+	 * Bueno, decidí hacer dos funciones por separado porque asi podria tener dos variables para cada cosa, me 
+	 * explico, si tuviera una para buscar la mas realizada solo me devolvería la matriz, pero de esa forma tendría
+	 * que usar un cuarto indice para ver la mas realizada pero, sentía que quedaría bien desordenado dentro de la funcion
+	 * y no se entenedría nada, asi que uso una para suarios y otra para la mas realizada en general
+	 */
+	
+	public static String[][] actividadDeModa_usuario(String[][] log)
+	{
+		String[] usuarios = new String[300];
+	    int cantidad_usuarios = 0;
+	    
+	    for (int i = 0; i < log.length; i++)
+	    {
+	        if (log[i][0] != null)
+	        {
+	            String user = log[i][0];
+	            boolean existe = false;
+	            for (int j = 0; j < cantidad_usuarios; j++)
+	            {
+	                if (usuarios[j] != null && usuarios[j].equals(user))
+	                {
+	                    existe = true;
+	                }
+	            }
+	            if (existe == false)
+	            {
+	                usuarios[cantidad_usuarios] = user;
+	                cantidad_usuarios++;
+	            }
+	        }
+	    }
+		String[][] resultado = new String[cantidad_usuarios][3];
+		for (int u = 0; u < cantidad_usuarios; u++)
+	    {
+	        String user = usuarios[u];
+	        String[] actividades = new String[300];
+	        int[] horas = new int[300];
+	        int cant = 0;
+	        //estoy cansado jefe:(
+	        for (int i = 0; i < log.length; i++)
+	        {
+	            if (log[i][0] != null && log[i][0].equals(user))
+	            {
+	                String act = log[i][3];
+	                int h = Integer.parseInt(log[i][2]);
+	                boolean existe = false;
+
+	                for (int j = 0; j < cant; j++)
+	                {
+	                    if (actividades[j] != null && actividades[j].equals(act))
+	                    {
+	                        horas[j] = horas[j] + h;
+	                        existe = true;
+	                    }
+	                }
+	                if (existe == false)
+	                {
+	                    actividades[cant] = act;
+	                    horas[cant] = h;
+	                    cant++;
+	                }
+	            }
+	        }
+	        int max = 0;
+	        String mejor = "";
+
+	        for (int i = 0; i < cant; i++)
+	        {
+	            if (horas[i] > max)
+	            {
+	                max = horas[i];
+	                mejor = actividades[i];
+	            }
+	        }
+	        resultado[u][0] = user;
+	        resultado[u][1] = mejor;
+	        resultado[u][2] = String.valueOf(max);
+	    }
+		return resultado; 
+		/*
+		 * fun fact, no me funcionaba la funcion al principio y estuve como 1 hora viendo por qué, reinicie como
+		 * 20 veces la consola y nada, despues de intentar cosa sin resultado, probe una vez mas y ahi si se solucionó 
+		 * un bug de que si agregaba una actividad luego la funcion no la tomaba y se quedaba con el log original, iwkms
+		 */
+	}
+	
+	/* 
+	 * Tuve que estar como una hora para darme cuenta que usaba el mismo i en los dos for y aparte tenia
+	 * el segundo for dentro del primero, según yo estaba bien el unicos pero cuando lo llamaba desde el 
+	 * menú se me caía el programa entero xd
+	 * 
+	 * Es una función para buscar únicos en el log, se actualiza cada que un usuario revisa el menu de análisis.
+	 */
+	
+	public static String[] unicos(String[][] log)
+	{
+	    String[] unicos = new String[300];
+	    int cantidad_unicos = 0;
+
+	    for (int i = 0; i < log.length; i++)
+	    {
+	        if (log[i][3] != null)
+	        {
+	            String actividad = log[i][3];
+	            boolean repetida = false;
+
+	            for (int j = 0; j < cantidad_unicos; j++)
+	            {
+	                if (unicos[j] != null && unicos[j].equals(actividad))
+	                {
+	                    repetida = true;
+	                }
+	            }
+
+	            if (repetida == false)
+	            {
+	                unicos[cantidad_unicos] = actividad;
+	                cantidad_unicos++;
+	            }
+	        }
+	    }
+
+	    String[] resultado = new String[cantidad_unicos];
+	    for (int k = 0; k < cantidad_unicos; k++)
+	    {
+	        resultado[k] = unicos[k];
+	    }
+
+	    return resultado;
+	}
 }
