@@ -14,6 +14,7 @@ public class Main
 		try { menu(); } 
 		catch (FileNotFoundException e) { System.out.println("Archivo no encontrado"); }
 		catch (Exception e) {System.out.println("Ocurrió un error: " + e.getMessage());}
+		teclado.close();
 	}
 	
 	
