@@ -1,4 +1,5 @@
 package logica;
+// Vicente Renato Galaz Palacios, 21.831.202-0, Ingeniería en Tecnologías de Información.
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -6,7 +7,6 @@ import java.io.PrintWriter;
 
 public class Main 
 {
-	// Vicente Renato Galaz Palacios, 21.831.202-0, Ingeniería en Tecnologías de Información.
 	static Scanner teclado = new Scanner(System.in);
 	
 	public static void main(String[] args) 
@@ -16,8 +16,6 @@ public class Main
 		catch (Exception e) {System.out.println("Ocurrió un error: " + e.getMessage());}
 		teclado.close();
 	}
-	
-	
 
 	public static void menu() throws FileNotFoundException
 	{	
